@@ -409,12 +409,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 970843617}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3d77d2ed4eab084c98526c8692e8c95, type: 3}
+  m_Script: {fileID: 11500000, guid: 3633727abe3891c469e0e9876293e729, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openSee: {fileID: 970843618}
   confidenceThreshold: 0.3
-  blinkCooldown: 0.15
-  faceId: 0
+  blinkCooldown: 0.1
   blinkCounts: 0
   inFrame: 0
+  openSee: {fileID: 970843618}
+  faceId: 0
+  BlinkEvent:
+    m_PersistentCalls:
+      m_Calls: []

@@ -32,6 +32,8 @@ public class ModelSenseBlink : MonoBehaviour
       model.transform.position = new Vector3(0f,1.04f,-6.69f);
       EyeData.Instance.BlinkEvent.AddListener(ModelMove);
       ani = model.GetComponent<Animator>();
+
+       ani.SetBool("gameOver", false);
     }
 
     void Start()
@@ -39,6 +41,7 @@ public class ModelSenseBlink : MonoBehaviour
 
       restart.GetComponent<Button>();
       restart.onClick.AddListener(Restart);
+
 
       Restart();
     }

@@ -7,7 +7,7 @@ public class EyeData : MonoBehaviour
 {
     [Header("Blink detection settings")]
     public float confidenceThreshold = 0.3f;
-    public float blinkCooldown = 0.1f;
+    public float blinkCooldown = 0.15f;
 
     [Header("Feedback viewing")]
     [SerializeField] int blinkCounts;
@@ -28,6 +28,7 @@ public class EyeData : MonoBehaviour
     OpenSee.OpenSee.OpenSeeData openSeeData;
     double previousTime = 0;
     float blinkTimer = 0f;
+    float startDelay = 1f;
 
     #region EyeData Singleton
     static private EyeData instance;
@@ -70,6 +71,8 @@ public class EyeData : MonoBehaviour
     void FixedUpdate()
     {
         blinkTimer += Time.deltaTime;
+
+        if (startDelay < 2f) { startDelay += Time.deltaTime; return; }
 
         if (blinkTimer > blinkCooldown)
         {

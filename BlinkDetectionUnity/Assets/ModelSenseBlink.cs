@@ -29,7 +29,7 @@ public class ModelSenseBlink : MonoBehaviour
       currentBlinkstxt.text = "0"; maxBlinkstxt.text = maxBlinks.ToString();
       gameOver.SetActive(false);
       model = this.gameObject;
-      model.transform.position = new Vector3(0f,1.04f,-6.69f);
+      model.transform.position = new Vector3(0f,0f,-6.69f);
       EyeData.Instance.BlinkEvent.AddListener(ModelMove);
       ani = model.GetComponent<Animator>();
 

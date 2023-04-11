@@ -37,7 +37,7 @@ public class OpenSeeLauncher : MonoBehaviour {
     [DllImport("dshowcapture_x86", CallingConvention = CallingConvention.Cdecl, EntryPoint = "destroy_capture")]
 	private static extern void destroy_capture_x86(System.IntPtr cap);
     #endregion
-    
+
     [Header("Settings")]
     [Tooltip("If this is left empty, it will default to the OpenSee component on the same game object.")]
     public OpenSee openSeeTarget;
@@ -74,7 +74,7 @@ public class OpenSeeLauncher : MonoBehaviour {
     [Header("Runtime information")]
     [Tooltip("This field shows if the tracker is currently alive.")]
     public bool trackerAlive = false;
-    
+
     private string ip;
     private Process trackerProcess = null;
     private StringBuilder trackerSB = null;
@@ -83,7 +83,7 @@ public class OpenSeeLauncher : MonoBehaviour {
     private System.IntPtr processStdOut = System.IntPtr.Zero;
     private System.IntPtr processStdErr = System.IntPtr.Zero;
     private Job job = null;
-    
+
     public void UnsetOption(string name, bool hasArgument) {
         int count = 1;
         if (hasArgument)
@@ -100,7 +100,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         if (found > -1)
             commandlineOptions.RemoveRange(found, count);
     }
-    
+
     public void SetOption(string name, string argument) {
         UnsetOption(name, argument != null);
         commandlineOptions.Add(name);
@@ -152,7 +152,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         }
         return true;
     }
-    
+
     private string[] ListCameras_x64() {
 		List<string> cameras = new List<string>();
         System.IntPtr cap = create_capture_x64();
@@ -165,7 +165,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         destroy_capture_x64(cap);
 		return cameras.ToArray();
     }
-    
+
     private string[] ListCameras_x86() {
 		List<string> cameras = new List<string>();
         System.IntPtr cap = create_capture_x86();
@@ -178,7 +178,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         destroy_capture_x86(cap);
 		return cameras.ToArray();
     }
-    
+
     public string[] ListCameras() {
         if (usePinvoke || usePinvokeListCameras) {
             if (Environment.Is64BitProcess)
@@ -186,7 +186,7 @@ public class OpenSeeLauncher : MonoBehaviour {
             else
                 return ListCameras_x86();
         }
-        
+
         if (!CheckSetup(false))
             return null;
 
@@ -204,7 +204,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         processStartInfo.UseShellExecute = false;
         processStartInfo.FileName = exePath;
         processStartInfo.Arguments = "--list-cameras 2";
-        
+
         process = new Process();
         process.StartInfo = processStartInfo;
         process.EnableRaisingEvents = true;
@@ -217,12 +217,12 @@ public class OpenSeeLauncher : MonoBehaviour {
         process.BeginOutputReadLine();
         process.WaitForExit();
         process.CancelOutputRead();
-        
+
         string cameraInfo = stringBuilder.ToString();
         string[] cameras = cameraInfo.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
         return cameras;
     }
-    
+
     public float[] Benchmark(int threads) {
         if (!CheckSetup(false))
             return null;
@@ -241,7 +241,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         processStartInfo.UseShellExecute = false;
         processStartInfo.FileName = exePath;
         processStartInfo.Arguments = "--benchmark 1 --priority 4 --max-threads " + threads.ToString();
-        
+
         process = new Process();
         process.StartInfo = processStartInfo;
         process.EnableRaisingEvents = true;
@@ -254,17 +254,17 @@ public class OpenSeeLauncher : MonoBehaviour {
         process.BeginOutputReadLine();
         process.WaitForExit();
         process.CancelOutputRead();
-        
+
         string[] lines = stringBuilder.ToString().Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
         float[] results = new float[lines.Length];
-        
+
         for (int i = 0; i < lines.Length; i++) {
             results[i] = Single.Parse(lines[i]);
         }
-        
+
         return results;
     }
-    
+
     // From: http://csharptest.net/529/how-to-correctly-escape-command-line-arguments-in-c/index.html
     private static string EscapeArguments(params string[] args)
     {
@@ -289,7 +289,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         }
         return arguments.ToString();
     }
-    
+
     public bool StartTracker() {
         if (!CheckSetup(true))
             return false;
@@ -297,7 +297,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         List<string> arguments = new List<string>();
         arguments.Add("--ip");
         arguments.Add(ip);
-        
+
         if (dynamicPort && !openSeeTarget.listening) {
             System.Net.IPEndPoint[] inUse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners();
             Array.Sort(inUse, delegate(System.Net.IPEndPoint a, System.Net.IPEndPoint b) { return a.Port.CompareTo(b.Port); });
@@ -322,7 +322,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         arguments.Add(openSeeTarget.listenPort.ToString());
         arguments.Add("--model-dir");
         arguments.Add(modelPath);
-        
+
         arguments.Add("--capture");
         if (videoPath != "" && File.Exists(videoPath))
             arguments.Add(videoPath);
@@ -334,7 +334,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         string argumentString = EscapeArguments(arguments.ToArray());
         if (extraOptions != "")
             argumentString = argumentString + " " + extraOptions;
-        
+
         if (logCommandline)
             UnityEngine.Debug.Log("Starting tracker: " + argumentString);
 
@@ -350,7 +350,7 @@ public class OpenSeeLauncher : MonoBehaviour {
             processStartInfo.UseShellExecute = false;
             processStartInfo.FileName = exePath;
             processStartInfo.Arguments = argumentString;
-            
+
             trackerSB = new StringBuilder();
             trackerProcess = new Process();
             trackerProcess.StartInfo = processStartInfo;
@@ -386,7 +386,7 @@ public class OpenSeeLauncher : MonoBehaviour {
                 return false;
         }
     }
-    
+
     public void StopTracker() {
         if (processHandle != System.IntPtr.Zero) {
             if (OpenSeeProcessInterface.Alive(processHandle))
@@ -414,7 +414,7 @@ public class OpenSeeLauncher : MonoBehaviour {
         }
         trackerProcess = null;
     }
-    
+
     public void Start() {
             //exePath = Application.dataPath + "OpenSeeFace/Binary/facetracker.exe";
         if (autoStart)
@@ -431,7 +431,7 @@ public class OpenSeeLauncher : MonoBehaviour {
             }
         }
     }
-    
+
     public void Update() {
         if (processHandle != System.IntPtr.Zero) {
             trackerAlive = OpenSeeProcessInterface.Alive(processHandle);
@@ -453,19 +453,19 @@ public class OpenSeeLauncher : MonoBehaviour {
             trackerSB.Clear();
         }
     }
-    
+
     private void CleanJob() {
         if (job != null) {
             job.Dispose();
             job = null;
         }
     }
-    
+
     public void OnDestroy() {
         StopTracker();
         CleanJob();
     }
-    
+
     public void OnApplicationQuit() {
         StopTracker();
         CleanJob();

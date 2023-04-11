@@ -61,6 +61,11 @@ public class EyeData : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            Instance.BlinkEvent.Invoke();
+        }
+
         blinkTimer += Time.deltaTime;
 
         if (blinkTimer > blinkCooldown)

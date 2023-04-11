@@ -59,13 +59,16 @@ public class EyeData : MonoBehaviour
         return openSeeData != null;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        if(Input.GetKeyDown(KeyCode.KeypadEnter))
+        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
         {
             Instance.BlinkEvent.Invoke();
         }
+    }
 
+    void FixedUpdate()
+    {
         blinkTimer += Time.deltaTime;
 
         if (blinkTimer > blinkCooldown)
@@ -78,7 +81,7 @@ public class EyeData : MonoBehaviour
             checkInFrame(openSeeData.time);
 
             // Check if player is blinking
-            if (isClosed(openSeeData.leftEyeOpen) && isClosed(openSeeData.rightEyeOpen))
+            if ((isClosed(openSeeData.leftEyeOpen) && isClosed(openSeeData.rightEyeOpen)) || !inFrame)
             {
                 Blink();
             }
@@ -109,6 +112,11 @@ public class EyeData : MonoBehaviour
         previousTime = time;
         inFrame = b;
         return b;
+    }
+
+    public void updateConfidence(float f)
+    {
+        this.confidenceThreshold = f;
     }
 
     /// <summary>
